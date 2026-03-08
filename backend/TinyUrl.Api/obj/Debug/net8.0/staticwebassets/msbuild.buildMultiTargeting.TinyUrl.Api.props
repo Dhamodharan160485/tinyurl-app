@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TinyUrl.Api.props" />
+</Project>
