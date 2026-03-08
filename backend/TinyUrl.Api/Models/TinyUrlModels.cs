@@ -38,7 +38,7 @@ namespace TinyUrl.Api.Models
     // This is what the CLIENT SENDS when creating a short URL.      
     //
     // SOLID: Interface Segregation Principle
-    // → Client only sees fields it actually needs to send
+    //  Client only sees fields it actually needs to send
     // -------------------------------------------------------
     public class TinyUrlAddDto
     {

@@ -26,7 +26,7 @@ namespace TinyUrl.Api.Data
         // We don't create this manually anywhere - ASP.NET
         // Core automatically injects it where needed.
         // SOLID: Dependency Inversion Principle
-        // → We depend on DbContextOptions abstraction,
+        //  We depend on DbContextOptions abstraction,
         //   not on a specific database directly
         // -------------------------------------------------------
         public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -39,10 +39,10 @@ namespace TinyUrl.Api.Data
         // Each TinyUrlEntry object = one ROW in that table
         //
         // How to use it:
-        // db.TinyUrls.ToListAsync()     → SELECT * FROM TinyUrls
-        // db.TinyUrls.Add(entry)        → INSERT INTO TinyUrls
-        // db.TinyUrls.Remove(entry)     → DELETE FROM TinyUrls
-        // db.TinyUrls.Where(...)        → SELECT WHERE ...
+        // db.TinyUrls.ToListAsync()      SELECT * FROM TinyUrls
+        // db.TinyUrls.Add(entry)         INSERT INTO TinyUrls
+        // db.TinyUrls.Remove(entry)      DELETE FROM TinyUrls
+        // db.TinyUrls.Where(...)         SELECT WHERE ...
         // -------------------------------------------------------
         public DbSet<TinyUrlEntry> TinyUrls => Set<TinyUrlEntry>();
 

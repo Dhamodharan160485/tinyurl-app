@@ -4,11 +4,11 @@
 //          e.g. "aB3xKq", "Tz9mPq", "kL2nXr"
 //
 // DESIGN PATTERN: Service Pattern
-// → Business logic is extracted into its own class
-// → API routes (Program.cs) don't contain this logic
+//  Business logic is extracted into its own class
+//  API routes (Program.cs) don't contain this logic
 //
 // SOLID: Single Responsibility Principle
-// → This class has ONE job: generate short codes
+//  This class has ONE job: generate short codes
 // =====================================================
 
 namespace TinyUrl.Api.Services
@@ -44,12 +44,12 @@ namespace TinyUrl.Api.Services
         // Generate() - creates a random short code
         //
         // How it works step by step:
-        // 1. Enumerable.Range(0, length) → creates [0,1,2,3,4,5]
+        // 1. Enumerable.Range(0, length)  creates [0,1,2,3,4,5]
         // 2. For each number, pick a random character from Chars
-        // 3. Random.Next(Chars.Length) → picks index 0 to 61
-        // 4. Chars[index] → gets the character at that index
-        // 5. ToArray() → converts to char array ['a','B','3','x','K','q']
-        // 6. new string(...) → converts to string "aB3xKq"
+        // 3. Random.Next(Chars.Length)  picks index 0 to 61
+        // 4. Chars[index]  gets the character at that index
+        // 5. ToArray()  converts to char array ['a','B','3','x','K','q']
+        // 6. new string(...)  converts to string "aB3xKq"
         //
         // Parameter:
         // length = how many characters the code should have
