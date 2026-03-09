@@ -82,8 +82,10 @@ export class TinyUrlService {
       params = params.set('search', search);
     }
 
+const url = `${this.apiUrl}/api/public`;
+  //console.log('Calling API:', url);   // 
     return this.http.get<TinyUrlEntry[]>(
-      `${this.apiUrl}/api/public`,
+      url,
       { params }  // passes ?search=xxx to the URL
     );
   }

@@ -5,13 +5,24 @@ PURPOSE: Template for the URL list component
 
 <div class="list-card">
 
+  <!-- Section Title -->
   <h2 class="section-title">Public URLs</h2>
 
-  <!-- Search and Refresh toolbar -->
+  <!-- ─── Search and Refresh Toolbar ─────────────────
+  toolbar contains two elements side by side:
+  1. Search input - filters the URL list
+  2. Refresh button - reloads the list from API
+  ──────────────────────────────────────────────────── -->
   <div class="toolbar">
 
-    <!-- Search input bound to searchTerm property -->
-    <!-- (ngModelChange) calls onSearch() every time value changes -->
+    <!-- Search Input -->
+    <!-- [(ngModel)]="searchTerm" -->
+    <!--  two-way binding to searchTerm property -->
+    <!--  every keystroke updates searchTerm -->
+    <!-- (ngModelChange)="onSearch()" -->
+    <!--  every keystroke calls onSearch() -->
+    <!--  onSearch() calls load() with new searchTerm -->
+    <!--  list reloads with filtered results -->
     <input
       type="text"
       [(ngModel)]="searchTerm"
@@ -20,50 +31,79 @@ PURPOSE: Template for the URL list component
       class="search-input"
     />
 
-    <!-- Refresh button manually reloads the list -->
+    <!-- Refresh Button -->
+    <!-- (click)="refresh()" calls refresh() when clicked -->
+    <!-- refresh() calls load() to reload list from API -->
     <button class="btn-refresh" (click)="refresh()">
       ↺ Refresh
     </button>
 
   </div>
 
-  <!-- Loading state -->
-  <!-- Shows while API call is in progress -->
+  <!-- ─── Loading State ───────────────────────────────
+  Shows "Loading..." while API call is in progress
+  *ngIf="loading" means:
+   loading=true   this div IS shown
+   loading=false  this div is NOT shown
+  ──────────────────────────────────────────────────── -->
   <div *ngIf="loading" class="loading">
     Loading...
   </div>
 
-  <!-- Empty state -->
-  <!-- Shows when API returns empty list -->
+  <!-- ─── Empty State ─────────────────────────────────
+  Shows when API returns empty array
+  Two conditions BOTH must be true:
+   !loading      = loading is finished
+   urls.length === 0 = no URLs in the list
+  ──────────────────────────────────────────────────── -->
   <div *ngIf="!loading && urls.length === 0" class="empty">
     No public URLs found.
   </div>
 
-  <!-- URL List -->
-  <!-- *ngFor loops through each URL and creates a row -->
+  <!-- ─── URL List ─────────────────────────────────────
+  *ngFor="let url of urls"
+   loops through each item in urls array
+   creates one .url-row div for each URL
+   "url" is the current item in each iteration
+
+  Example: if urls has 3 items:
+   Angular creates 3 .url-row divs
+   First div has data of urls[0]
+   Second div has data of urls[1]
+   Third div has data of urls[2]
+  ──────────────────────────────────────────────────── -->
   <div class="url-row" *ngFor="let url of urls">
 
-    <!-- Left side: URL information -->
+    <!-- Left side: URL Information -->
     <div class="url-info">
 
-      <!-- Short URL - clicking opens in new tab -->
+      <!-- Short URL as clickable link -->
+      <!-- [href]="url.shortUrl" -->
+      <!--  property binding sets href attribute -->
+      <!--  e.g. href="https://localhost:7212/aB3xKq" -->
+      <!-- target="_blank" opens link in new browser tab -->
       <a [href]="url.shortUrl" target="_blank" class="short-link">
         {{ url.shortUrl }}
       </a>
 
-      <!-- Click count badge -->
+      <!-- Click Count Badge -->
+      <!-- {{ url.clicks }} displays click count number -->
+      <!-- e.g. "3 clicks" -->
       <span class="clicks">{{ url.clicks }} clicks</span>
 
-      <!-- Original URL -->
+      <!-- Original Long URL -->
+      <!-- Shows the full URL user originally submitted -->
+      <!-- CSS truncates it with "..." if too long -->
       <div class="original">{{ url.originalUrl }}</div>
 
     </div>
 
-    <!-- Right side: Action buttons -->
+    <!-- Right side: Action Buttons -->
     <div class="actions">
 
-      <!-- Copy button -->
-      <!-- [class.copied] adds "copied" CSS class when this URL was copied -->
+      <!-- Copy Button -->
+      <!-- (click)="copy(url)" passes current url to copy() -->
+      <!-- copy() uses navigator.clipboard to copy shortUrl -->  
       <button
         class="btn-copy"
         (click)="copy(url)"
@@ -72,7 +112,10 @@ PURPOSE: Template for the URL list component
         {{ copiedCode === url.code ? '✓ Copied' : 'Copy' }}
       </button>
 
-      <!-- Delete button -->
+      <!-- Delete Button -->
+      <!-- (click)="delete(url)" passes current url to delete() -->
+      <!-- delete() shows confirmation dialog first -->
+      <!-- then calls API to delete if user confirms -->
       <button class="btn-delete" (click)="delete(url)">
         Delete
       </button>
@@ -81,8 +124,13 @@ PURPOSE: Template for the URL list component
 
   </div>
 
-  <!-- Toast notification -->
-  <!-- *ngIf shows only when toastMsg has a value -->
+  <!-- ─── Toast Notification ───────────────────────────
+  Shows brief notification at bottom of screen
+  *ngIf="toastMsg" means:
+   toastMsg has value  toast IS shown
+   toastMsg is empty   toast is NOT shown
+  showToast() sets toastMsg and clears it after 2.5s
+  ──────────────────────────────────────────────────── -->
   <div class="toast" *ngIf="toastMsg">
     {{ toastMsg }}
   </div>

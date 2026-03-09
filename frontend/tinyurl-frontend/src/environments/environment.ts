@@ -10,5 +10,5 @@ export const environment = {
   // Your .NET API URL - check the port in Visual Studio
   // When you press F5 in VS, look for:
   // "Now listening on: https://localhost:XXXX"
-  apiUrl: 'https://localhost:7001'
+  apiUrl: 'https://localhost:7212'
 };

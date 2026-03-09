@@ -1,0 +1,56 @@
+// =====================================================
+// FILE: app.scss
+// PURPOSE: Global layout styles for the root component
+// =====================================================
+
+// Full height layout using flexbox
+.app-container {
+  min-height: 100vh;        // full viewport height
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;   // stack header, main, footer
+}
+
+// Pink header bar
+.app-header {
+  background: #e91e63;
+  color: #ffffff;
+  text-align: center;
+  padding: 40px 20px 32px;
+
+  h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.85;
+  }
+}
+
+// Main content area
+// flex: 1 makes it fill all available space
+// between header and footer
+.app-main {
+  flex: 1;
+  max-width: 780px;         // limit width on large screens
+  width: 100%;
+  margin: 0 auto;           // center horizontally
+  padding: 36px 20px;
+}
+
+// Footer bar
+.app-footer {
+  background: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+  color: #999999;
+
+  p { margin: 0; }
+}
