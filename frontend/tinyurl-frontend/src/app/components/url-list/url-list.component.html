@@ -1,0 +1,90 @@
+<!-- =====================================================
+FILE: components/url-list/url-list.component.html
+PURPOSE: Template for the URL list component
+===================================================== -->
+
+<div class="list-card">
+
+  <h2 class="section-title">Public URLs</h2>
+
+  <!-- Search and Refresh toolbar -->
+  <div class="toolbar">
+
+    <!-- Search input bound to searchTerm property -->
+    <!-- (ngModelChange) calls onSearch() every time value changes -->
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearch()"
+      placeholder="Search URLs..."
+      class="search-input"
+    />
+
+    <!-- Refresh button manually reloads the list -->
+    <button class="btn-refresh" (click)="refresh()">
+      ↺ Refresh
+    </button>
+
+  </div>
+
+  <!-- Loading state -->
+  <!-- Shows while API call is in progress -->
+  <div *ngIf="loading" class="loading">
+    Loading...
+  </div>
+
+  <!-- Empty state -->
+  <!-- Shows when API returns empty list -->
+  <div *ngIf="!loading && urls.length === 0" class="empty">
+    No public URLs found.
+  </div>
+
+  <!-- URL List -->
+  <!-- *ngFor loops through each URL and creates a row -->
+  <div class="url-row" *ngFor="let url of urls">
+
+    <!-- Left side: URL information -->
+    <div class="url-info">
+
+      <!-- Short URL - clicking opens in new tab -->
+      <a [href]="url.shortUrl" target="_blank" class="short-link">
+        {{ url.shortUrl }}
+      </a>
+
+      <!-- Click count badge -->
+      <span class="clicks">{{ url.clicks }} clicks</span>
+
+      <!-- Original URL -->
+      <div class="original">{{ url.originalUrl }}</div>
+
+    </div>
+
+    <!-- Right side: Action buttons -->
+    <div class="actions">
+
+      <!-- Copy button -->
+      <!-- [class.copied] adds "copied" CSS class when this URL was copied -->
+      <button
+        class="btn-copy"
+        (click)="copy(url)"
+        [class.copied]="copiedCode === url.code"
+      >
+        {{ copiedCode === url.code ? '✓ Copied' : 'Copy' }}
+      </button>
+
+      <!-- Delete button -->
+      <button class="btn-delete" (click)="delete(url)">
+        Delete
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Toast notification -->
+  <!-- *ngIf shows only when toastMsg has a value -->
+  <div class="toast" *ngIf="toastMsg">
+    {{ toastMsg }}
+  </div>
+
+</div>

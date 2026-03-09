@@ -21,15 +21,15 @@
 // It imports its own dependencies directly.
 // =====================================================
 
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core'; //@angular/core is the heart of Angular. It contains the most essential building blocks.
+import { CommonModule } from '@angular/common'; //contains common Angular directives we use in HTML templates.
+import { FormsModule } from '@angular/forms';  //contains everything related to forms and input handling.
 import { TinyUrlService } from '../../services/tiny-url.service';
 import { TinyUrlEntry } from '../../models/tiny-url.model';
 
 @Component({
   selector: 'app-url-form',       // used as <app-url-form> in HTML
-  standalone: true,               // no NgModule needed
+  standalone: true,               // no NgModule needed. this component is independent
   imports: [
     CommonModule,   // gives us *ngIf, *ngFor in template
     FormsModule     // gives us [(ngModel)] two-way binding
