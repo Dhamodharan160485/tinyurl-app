@@ -1,0 +1,60 @@
+<!-- =====================================================
+FILE: components/url-form/url-form.component.html
+PURPOSE: Template for the URL form
+
+Two-way binding [(ngModel)]
+ When user types in input, url property updates
+ When url property changes, input updates
+ Both stay in sync automatically
+===================================================== -->
+
+<div class="form-card">
+
+  <!-- URL Input Row -->
+  <div class="input-row">
+
+    <!-- Text input bound to url property -->
+    <!-- (keyup.enter) means pressing Enter calls generate() -->
+    <input
+      type="url"
+      [(ngModel)]="url"
+      placeholder="Enter URL to shorten e.g. https://google.com"
+      class="url-input"
+      (keyup.enter)="generate()"
+    />
+
+    <!-- Checkbox bound to isPrivate property -->
+    <label class="private-label">
+      <input
+        type="checkbox"
+        [(ngModel)]="isPrivate"
+      />
+      Is Private
+    </label>
+
+  </div>
+
+  <!-- Generate Button -->
+  <!-- [disabled]="loading" disables button while API call is running -->
+  <button
+    class="btn-generate"
+    (click)="generate()"
+    [disabled]="loading"
+  >
+    <!-- Show different text based on loading state -->
+    {{ loading ? 'Generating...' : 'Generate' }}
+  </button>
+
+  <!-- Success Message -->
+  <!-- *ngIf shows this only when success has a value -->
+  <p class="msg success" *ngIf="success">
+    {{ success }}
+  </p>
+
+  <!-- Error Message -->
+  <!-- *ngIf shows this only when error has a value -->
+  <p class="msg error" *ngIf="error">
+    {{ error }}
+  </p>
+
+</div>
