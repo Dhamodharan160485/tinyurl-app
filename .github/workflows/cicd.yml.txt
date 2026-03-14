@@ -1,0 +1,154 @@
+# =====================================================
+# FILE: .github/workflows/cicd.yml
+# PURPOSE: CI/CD pipeline for TinyURL app
+#
+# What is CI/CD?
+# CI = Continuous Integration
+# → Every push to main branch triggers this workflow
+# → Automatically builds and tests the code
+#
+# CD = Continuous Deployment
+# → After successful build, automatically deploys
+#   to Azure without manual steps
+#
+# WORKFLOW:
+# Push to main
+#   → Build Backend   → Deploy Backend to Azure
+#   → Build Frontend  → Deploy Frontend to Azure
+# =====================================================
+
+name: CI/CD - TinyURL
+
+# -------------------------------------------------------
+# Trigger: runs when code is pushed to main branch
+# or when a pull request is made to main branch
+# -------------------------------------------------------
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  # =====================================================
+  # JOB 1: Build and Deploy Backend
+  # =====================================================
+  build-and-deploy-backend:
+    name: Backend - Build and Deploy
+    runs-on: ubuntu-latest   # runs on Linux server
+
+    steps:
+      # -------------------------------------------------------
+      # Step 1: Checkout code from GitHub
+      # Gets the latest code from repository
+      # -------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # -------------------------------------------------------
+      # Step 2: Setup .NET 8
+      # Installs .NET SDK on the build server
+      # -------------------------------------------------------
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # -------------------------------------------------------
+      # Step 3: Restore packages
+      # Downloads all NuGet packages needed
+      # Same as running "dotnet restore" locally
+      # -------------------------------------------------------
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: backend/TinyUrl.Api
+
+      # -------------------------------------------------------
+      # Step 4: Build the project
+      # Compiles the C# code
+      # Same as pressing F5 in Visual Studio
+      # -------------------------------------------------------
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: backend/TinyUrl.Api
+
+      # -------------------------------------------------------
+      # Step 5: Publish the project
+      # Creates deployable output files
+      # --self-contained false = use Azure's .NET runtime
+      # -------------------------------------------------------
+      - name: Publish
+        run: dotnet publish -c Release -r linux-x64 --self-contained false -o ./publish
+        working-directory: backend/TinyUrl.Api
+
+      # -------------------------------------------------------
+      # Step 6: Deploy to Azure Web App
+      # Uses the publish profile secret we added to GitHub
+      # Uploads the published files to Azure
+      # Only runs on push to main (not on pull requests)
+      # -------------------------------------------------------
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME_API }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
+          package: backend/TinyUrl.Api/publish
+
+  # =====================================================
+  # JOB 2: Build and Deploy Frontend
+  # =====================================================
+  build-and-deploy-frontend:
+    name: Frontend - Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # -------------------------------------------------------
+      # Step 1: Checkout code from GitHub
+      # -------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # -------------------------------------------------------
+      # Step 2: Setup Node.js 20
+      # Installs Node.js on the build server
+      # cache: 'npm' speeds up builds by caching packages
+      # -------------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/tinyurl-frontend/package-lock.json
+
+      # -------------------------------------------------------
+      # Step 3: Install Angular packages
+      # Same as running "npm install" locally
+      # -------------------------------------------------------
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend/tinyurl-frontend
+
+      # -------------------------------------------------------
+      # Step 4: Build Angular for production
+      # Creates optimized production build
+      # Uses environment.prod.ts instead of environment.ts
+      # Output goes to dist/tinyurl-frontend/browser
+      # -------------------------------------------------------
+      - name: Build Angular
+        run: npm run build -- --configuration production
+        working-directory: frontend/tinyurl-frontend
+
+      # -------------------------------------------------------
+      # Step 5: Deploy to Azure Web App
+      # Uploads the built Angular files to Azure
+      # Only runs on push to main (not on pull requests)
+      # -------------------------------------------------------
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME_FRONTEND }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
+          package: frontend/tinyurl-frontend/dist/tinyurl-frontend/browser
