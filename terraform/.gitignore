@@ -1,0 +1,8 @@
+# Terraform providers and state files
+# These are large files and should never be committed
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+terraform-provider*
