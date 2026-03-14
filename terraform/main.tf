@@ -43,28 +43,6 @@ provider "azurerm" {
 }
 
 # -------------------------------------------------------
-# Variables
-# These are like function parameters for Terraform
-# Values come from terraform.tfvars file
-# or passed via command line
-# -------------------------------------------------------
-
-variable "location" {
-  description = "Azure region where resources will be created"
-  default     = "westeurope"
-}
-
-variable "prefix" {
-  description = "Prefix for all resource names"
-  default     = "tinyurl"
-}
-
-variable "suffix" {
-  description = "Unique suffix to avoid name conflicts"
-  default     = "dhamo"
-}
-
-# -------------------------------------------------------
 # Resource Group
 # Container for all Azure resources
 # Like a folder that holds everything together

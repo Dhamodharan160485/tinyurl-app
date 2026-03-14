@@ -26,17 +26,3 @@ variable "suffix" {
   type        = string
   default     = "dhamo"
 }
-```
-
----
-
-### File 4: .gitignore for terraform
-Right click on **terraform** folder → **New File** → name it `.gitignore`:
-```
-# Terraform state files
-# These contain sensitive info and should never be committed
-.terraform/
-*.tfstate
-*.tfstate.backup
-*.tfvars
-.terraform.lock.hcl
